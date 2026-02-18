@@ -1,1 +1,4 @@
 .env
+./router/routes.txt
+apps/
+nohup.out

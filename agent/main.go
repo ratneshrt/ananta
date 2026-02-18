@@ -22,10 +22,18 @@ type DeployResponse struct {
 }
 
 func deployHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+
 	var req DeployRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(DeployResponse{
+			Error: "invalid JSON body",
+		})
 		return
 	}
 
@@ -53,7 +61,7 @@ func deployHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/deploy", deployHandler)
+	http.HandleFunc("/ratneshrt", deployHandler)
 	log.Println("deploy agent listening on :9000")
 	log.Fatal(http.ListenAndServe(":9000", nil))
 }
